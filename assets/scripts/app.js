@@ -175,8 +175,13 @@ function healPlayerHandler() {
 }
 
 function printLogHandler() {
-    for (let i = 0; i < 3; i++ ) {
+     for (let i = 0; i < 3; i++ ) {
         console.log('__________');
+    } 
+    let j = 0;
+    while (j < 3) {
+        console.log('J is less than 3');
+        j++;
     }
     /* for (let i = 10; i > 0;) {
         i--;
