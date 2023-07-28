@@ -11,15 +11,32 @@ const LOG_EVENT_MONSTER_ATTACK = 'MONSTER_ATTACK';
 const LOG_EVENT_PLAYER_HEAL = 'PLAYER_HEAL';
 const LOG_EVENT_GAME_OVER = 'GAME_OVER';
 
-const enteredValue = prompt('Maximum life for you and the monster.', '100');
 
-let chosenMaXLife = parseInt(enteredValue);
 let battleLog = [];
+let lastLogEntry;
 
-if (isNaN(chosenMaXLife) || chosenMaXLife <= 0) {
-    chosenMaXLife = 100;
+function getMaxLifeValues() {
+    const enteredValue = prompt('Maximum life for you and the monster.', '100');
+    const parsedValue = parseInt(enteredValue);
+    if (isNaN(parsedValue) || parsedValue <= 0) {
+        throw {"message": 'User entered invalid input'}; // throws error if user input is NaN
+    }
+    return parsedValue;
 }
 
+let chosenMaXLife;
+
+try {
+    chosenMaXLife = getMaxLifeValues();
+} catch (error) {
+    console.log(error);
+     chosenMaXLife = 100;
+    alert('You entered something wrong, Default health set to 100');
+    //throw error;
+} /* finally {
+
+}
+ */
 let currentMonsterHealth = chosenMaXLife;
 let currentPlayerHealth = chosenMaXLife;
 let hasBonusLife = true;
@@ -178,11 +195,18 @@ function printLogHandler() {
      for (let i = 0; i < 3; i++ ) {
         console.log('__________');
     } 
-    let j = 0;
-    while (j < 3) {
-        console.log('J is less than 3');
-        j++;
+   let j = 0;
+   outerWhile: do {
+    console.log('Outer', j);
+    innerFor: for (let k = 0; k < 5; k++) {
+        if (k === 3) {
+            break outerWhile;
+            //continue outerWhile; careful => this creates an infinite loop!
+        }
+        console.log('Inner', k);
     }
+    j++;
+   } while (j < 3);
     /* for (let i = 10; i > 0;) {
         i--;
         console.log(i); // uses javascript for loop to iterate through battle log entries
@@ -192,9 +216,13 @@ function printLogHandler() {
     } */
     let i = 0;
     for (const logEntry of battleLog) { 
-        console.log(`#${i}`);
-        for (const key in logEntry) {
-            console.log(`${key} => ${logEntry[key]}`);
+        if (!lastLogEntry  && lastLogEntry !== 0 || lastLogEntry < i) {
+            console.log(`#${i}`);
+            for (const key in logEntry) {
+                console.log(`${key} => ${logEntry[key]}`);
+            }
+            lastLogEntry = i;
+            break;
         }
         i++;
     }
